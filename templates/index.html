@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tasks</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <h1>Tasks</h1>
+      <p class="stat">{{ done_count }} of {{ total }} complete</p>
+    </header>
+
+    <form class="add-form" action="{{ url_for('add') }}" method="POST">
+      <input type="text" name="task" placeholder="Add a task" autocomplete="off" required>
+      <button type="submit">Add</button>
+    </form>
+
+    <ul class="list">
+      {% for todo in todos %}
+      <li class="item {{ 'done' if todo['done'] else '' }}">
+        <form class="toggle-form" action="{{ url_for('toggle', todo_id=todo['id']) }}" method="POST">
+          <button type="submit" class="check" aria-label="Toggle complete">
+            {{ '✓' if todo['done'] else '' }}
+          </button>
+        </form>
+        <span class="task-text">{{ todo['task'] }}</span>
+        <form class="delete-form" action="{{ url_for('delete', todo_id=todo['id']) }}" method="POST">
+          <button type="submit" class="delete" aria-label="Delete task">×</button>
+        </form>
+      </li>
+      {% else %}
+      <li class="empty">No tasks yet. Add one above.</li>
+      {% endfor %}
+    </ul>
+  </main>
+</body>
+</html>
